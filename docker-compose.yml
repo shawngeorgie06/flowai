@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: flowai-db
+    environment:
+      POSTGRES_USER: flowai
+      POSTGRES_PASSWORD: flowai_dev
+      POSTGRES_DB: flowai
+    ports:
+      - "5433:5432"
+    volumes:
+      - flowai_pgdata:/var/lib/postgresql/data
+
+volumes:
+  flowai_pgdata:

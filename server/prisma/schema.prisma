@@ -1,0 +1,38 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Workflow {
+  id              String   @id @default(uuid())
+  name            String
+  description     String?
+  plainTextInput  String   @map("plain_text_input")
+  parsedConfig    Json     @map("parsed_config")
+  cronExpression  String?  @map("cron_expression")
+  triggerType     String   @default("cron") @map("trigger_type")
+  webhookToken    String?  @unique @map("webhook_token")
+  active          Boolean  @default(true)
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  executionLogs ExecutionLog[]
+
+  @@map("workflows")
+}
+
+model ExecutionLog {
+  id         String   @id @default(uuid())
+  workflowId String   @map("workflow_id")
+  status     String   // "success" | "failure"
+  output     String?
+  error      String?
+  executedAt DateTime @default(now()) @map("executed_at")
+
+  workflow Workflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+
+  @@map("execution_logs")
+}
