@@ -9,7 +9,7 @@ services:
     name: flowai
     runtime: node
     plan: free
-    buildCommand: npm run install:all && npm run build && cd server && npx prisma generate && npx prisma db push
+    buildCommand: NODE_ENV=development npm run install:all && npm run build && cd server && npx prisma generate && npx prisma db push
     startCommand: npm start
     envVars:
       - key: DATABASE_URL
